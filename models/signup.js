@@ -1,14 +1,16 @@
 const mongoose = require("mongoose")
-const db_conn = require("./db_connection")
+const connectDB = require("./db_connection")
+const { connecDB } = require("./db_connection")
 const schema = mongoose.Schema
 
-const signup_schema = new schema({
+const user_schema = new schema({
     user_id : schema.Types.ObjectId,
     email : String,
     password : String,
     created_time : {type: Date, default: Date.now}
 })
 
-const signup_model = mongoose.model("signup_model", signup_schema)
+connectDB()
+const Users = mongoose.model("Users", user_schema)
 
-module.exports = signup_model
+module.exports = Users

@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 const { validationResult, body } = require("express-validator")
 const base64 = require('base-64');
-const signup_model = require("../models/signup")
+const Users = require("../models/signup")
 
 //Parses JSON data from request body
 router.use(express.json())
@@ -16,13 +16,13 @@ router.post("/", body("email").isEmail(), body("password").isStrongPassword(), (
     }
     
     const encodedPassword = base64.encode(req.body.password)
-    console.log(encodedPassword)
+    //console.log(encodedPassword)
 
-    const signup_model_instance = new signup_model({
+    const Users_instance = new Users({
         email : req.body.email,
         password : encodedPassword
     })
-    signup_model_instance.save((err) => {
+    Users_instance.save((err) => {
         if (err) {
             console.log("Error: Cannot create model instance.")
         }
