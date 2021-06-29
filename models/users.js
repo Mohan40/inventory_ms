@@ -8,7 +8,8 @@ connectDB()
 const user_schema = new schema({
     email : String,
     password : String,
-    created_time : {type: Date, default: Date.now()}
+    created_time : {type: Date, default: Date.now()},
+    session_id : {default : 0}
 })
 
 user_schema.plugin(AutoIncrement, {inc_field: 'user_id'});
