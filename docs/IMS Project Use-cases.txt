@@ -1,0 +1,76 @@
+IMS:
+---
+
+Setup MongoDB in local...
+  Users : user_id, email_id, encrypted_pwd (base_encoded), created_time, session_id (uuid)
+  Product : prod_id, prod_name, prod_dimensions (JSON dynamic object h/w/l/color), prod_qty, prod_price ($), Channel (air/ship/train), created_at, updated_at
+
+Use cases:
+
+1. Sign up 
+2. Sign in
+3. Create Products
+4. Search a Product
+5. Update a product
+6. Deleting a product
+
+1. Create a signup user api
+	a. POST
+        b. pass the user_email/pwd in the payload. (Auth headers)
+		Verify the pwd format (alphanumeric, min 8 letters, 1 cap, 1 small, 1 digit, 1 special char)
+		Verify the email id format ( should have "@" symbol and ".com")
+        c. create a record in users table in Mongodb. Store pwd in encrypted format
+	d. Return user_id/created_time/success message (html_code:200, message:User successfully created) or error_message 
+	(html_code:400, message: "Error occurred while creating user", error_message: <stack>)
+
+2. Signin
+     a. POST
+     b. pass email/pwd in the payload (Auth headers)
+     c. If email and decrypted pwd matches the payload, update the users_table with a session_id
+	return true (html_code:200, message:User successfully signed in, session_id: <session_id>, user_id) 
+	else false  (html_code:(>300), message:Error while logging in, error_message : "<stack>")
+
+3. Create a new product in MongoDb under products table
+     a. POST
+     b. Pass the SessionToken along with user_id (Auth Headers) and verify against the user_table...if matches, user is valid and go to next step else return  (html_code:(>300), message:Error while logging in, error_message : "Session token has expired")
+     c. Pass ProductName (String), Product Specs (JSON object...dimensions, colors, etc..), Product Qty (numeric), Product Price (Float), Product Channel (Air/Ship/Train)
+     d. Add validation to above params
+     e. Create an entry in mongodb in products table
+     f. Return product_id, created_at, updated_at
+	Success:(html_code:200, message:JSON object)
+	Error:(html_code:(>300, message:Error while creating a product, error_message : "<stack> or specific err message")
+
+4. Search for a product
+     a. GET
+     b. Pass Product Name
+     c. Perform a search query on products table and return "id, name, qty, price, specs"
+	Success:(html_code:200, message:JSON object)
+	Error:(html_code:(>300, message:Error while searching, error_message : "<stack> or specific err message")
+     d. Pass the SessionToken along with user_id (Auth Headers) and verify against the user_table...if matches, user is valid and go to next step else return  (html_code:(>300), message:Error while logging in, error_message : "Session token has expired")
+
+5. Update a product
+     a. PATCH
+     b. Pass Product Specs or/and Qty or/and Price...for qty need to add to available qty...validation as above...
+     c. Return the id and message
+	Success:(html_code:200, message:JSON object)
+	Error:(html_code:(>300, message:Error while updating product, error_message : "<stack> or specific err message")
+     d. Pass the SessionToken along with user_id (Auth Headers) and verify against the user_table...if matches, user is valid and go to next step else return  (html_code:(>300), message:Error while logging in, error_message : "Session token has expired")
+
+6. Delete a product
+     a. DELETE
+     b. Pass Product Id and find the value and delete from mongodb
+     c. Return success or error message
+        Success:(html_code:200, message:"Successfully deleted product")
+	Error:(html_code:(>300, message:Error while updating product, error_message : "<stack> or specific err message")
+     d. Pass the SessionToken along with user_id (Auth Headers) and verify against the user_table...if matches, user is valid and go to next step else return  (html_code:(>300), message:Error while logging in, error_message : "Session token has expired")
+
+
+
+
+
+
+
+
+
+
+
