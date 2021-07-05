@@ -5,7 +5,6 @@ const user_routes = require("./src/routes/user_routes.js");
 const product_routes = require("./src/routes/product_routes");
 const { logger_info } = require("./src/logger");
 
-
 //process.env.NODE_ENV = 'development';
 
 //To execute file in production "PORT=9999 node app.js"

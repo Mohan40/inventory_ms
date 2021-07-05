@@ -4,7 +4,7 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const product_schema = new schema({
   product_name: String,
-  product_specifications: {},
+  product_specifications: {type: Object},
   product_quantity: Number,
   product_price: schema.Types.Decimal128,
   delivery_channel: String,
