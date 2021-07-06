@@ -10,7 +10,7 @@ router.use(cookieParser());
 router.use(express.json());
 
 const checkSession = (req, res, next) => {
-  console.log(req.sessionID)
+  //console.log(req.sessionID)
   if (req.cookies["connect.sid"]) {
     cookieInfo = req.cookies["connect.sid"];
     sessionID = cookieInfo.substring(2, 38);
@@ -44,7 +44,7 @@ const checkSession = (req, res, next) => {
 router.use(checkSession);
 
 router.post("/createproduct", product_controller.createProduct);
-//router.post("/searchproduct", product_controller.searchProduct)
+router.get("/searchproduct/:productName", product_controller.searchProduct)
 //router.post("/updateproduct", product_controller.updateProduct)
 //router.post("/deleteproduct", product_controller.deleteProduct)
 
