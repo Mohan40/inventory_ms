@@ -10,7 +10,7 @@ const signUp = (req, res) => {
     logger_error.log({
       level: "error",
       email: req.body.email,
-      message: "Invalid email address or password."
+      message: "Invalid email address or password.",
     });
     return res
       .status(400)
@@ -18,12 +18,20 @@ const signUp = (req, res) => {
   }
   user.find({ email: req.body.email }, (err, result) => {
     if (err) {
-      logger_error.log({ level: "error", email: req.body.email, message: "Lookup for email failed." });
+      logger_error.log({
+        level: "error",
+        email: req.body.email,
+        message: "Lookup for email failed.",
+      });
       return res
         .status(400)
         .json({ code: "400", message: "Error while signing up." });
     } else if (result.length !== 0) {
-      logger_error.log({ level: "error", email: req.body.email, message: "Email address already in use." });
+      logger_error.log({
+        level: "error",
+        email: req.body.email,
+        message: "Email address already in use.",
+      });
       return res
         .status(400)
         .json({ code: "400", message: "Error while signing up." });
@@ -38,21 +46,22 @@ const signUp = (req, res) => {
           logger_error.log({
             level: "error",
             email: req.body.email,
-            message: "Not able to save the instance."
+            message: "Not able to save the instance.",
           });
           return res
             .status(400)
             .json({ code: "400", message: "Error while signing up." });
+        } else {
+          logger_info.log({
+            level: "info",
+            email: req.body.email,
+            message: "Success. Account created.",
+          });
+          return res
+            .status(200)
+            .json({ status: "200", message: "Success. Account created." });
         }
       });
-      logger_info.log({
-        level: "info",
-        email: req.body.email,
-        message: "Success. Account created."
-      });
-      return res
-        .status(200)
-        .json({ status: "200", message: "Success. Account created." });
     }
   });
 };
@@ -60,7 +69,11 @@ const signUp = (req, res) => {
 const signIn = (req, res) => {
   user.find({ email: req.body.email }, (err, result) => {
     if (err) {
-      logger_error.log({ level: "error", email: req.body.email, message: "Not able to find email." });
+      logger_error.log({
+        level: "error",
+        email: req.body.email,
+        message: "Not able to find email.",
+      });
       return res
         .status(400)
         .json({ code: "400", message: "Error while signing in." });
@@ -92,11 +105,11 @@ const signIn = (req, res) => {
                 .json({ code: "400", message: "Error while signing in." });
             }
           }
-        ); 
+        );
         logger_info.log({
           level: "info",
           email: req.body.email,
-          message: "Welcome! Successfully signed in."
+          message: "Welcome! Successfully signed in.",
         });
         return res.status(200).json({
           status: "200",
@@ -104,7 +117,11 @@ const signIn = (req, res) => {
           sessionID: sessionID,
         });
       } else {
-        logger_error.log({ level: "error", email: req.body.email, message: "Passwords don't match." });
+        logger_error.log({
+          level: "error",
+          email: req.body.email,
+          message: "Passwords don't match.",
+        });
         return res
           .status(400)
           .json({ code: "400", message: "Error while signing in." });
@@ -138,7 +155,7 @@ const signOut = (req, res) => {
     logger_info.log({
       level: "info",
       email: req.body.email,
-      message: "Successfully signed out."
+      message: "Successfully signed out.",
     });
     return res.clearCookie("connect.sid").status(200).json({
       status: "200",

@@ -3,8 +3,8 @@ const schema = mongoose.Schema;
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const user_schema = new schema({
-  email: String,
-  password: String,
+  email: { type : String },
+  password: { type : String },
   created_time: { type: Date, default: Date.now() },
   session_id: { type: String, default: "None" },
 });

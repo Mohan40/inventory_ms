@@ -44,8 +44,8 @@ const checkSession = (req, res, next) => {
 router.use(checkSession);
 
 router.post("/createproduct", product_controller.createProduct);
-router.get("/searchproduct/:productName", product_controller.searchProduct)
-//router.post("/updateproduct", product_controller.updateProduct)
-//router.post("/deleteproduct", product_controller.deleteProduct)
+router.get("/searchproduct/:productName", product_controller.searchProduct);
+router.patch("/updateproduct", product_controller.updateProduct)
+router.post("/deleteproduct", product_controller.deleteProduct)
 
 module.exports = router;
