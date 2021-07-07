@@ -201,18 +201,19 @@ const updateProduct = (req, res) => {
               }
             }
           );
-          if (errorCount !== 0) {
-          logger_info.log({
-            level: "info",
-            email: "Not available",
-            message: "Successfully updated the product listing.",
-          });
-          return res.status(200).json({
-            status: "200",
-            message: "Successfully updated the product listing.",
-          });
+          if (errorCount === 0) {
+            logger_info.log({
+              level: "info",
+              email: "Not available",
+              message: "Successfully updated the product listing.",
+            });
+            return res.status(200).json({
+              status: "200",
+              message: "Successfully updated the product listing.",
+              product_name: req.body.product_name,
+            });
+          }
         }
-        } 
       }
       productUpdate();
     }
@@ -220,7 +221,56 @@ const updateProduct = (req, res) => {
 };
 
 const deleteProduct = (req, res) => {
-
-}
+  if (typeof req.body.productName !== "undefined") {
+    product.findOneAndDelete(
+      { product_name: req.body.productName },
+      (err, result) => {
+        if (err) {
+          logger_error.log({
+            level: "error",
+            email: "Not available",
+            message: "Error in delete function.",
+          });
+          return res.status(400).json({
+            status: "400",
+            message: "Unable to delete the product listing.",
+          });
+        }
+        else if (result === null) {
+          logger_error.log({
+            level: "error",
+            email: "Not available",
+            message: "No product available.",
+          });
+          return res.status(400).json({
+            status: "400",
+            message: "Unable to delete the product listing.",
+          });
+        } else {
+          logger_info.log({
+            level: "info",
+            email: "Not available",
+            message: "Successfully deleted the product listing.",
+          });
+          return res.status(200).json({
+            status: "200",
+            message: "Successfully deleted the product listing.",
+            //product_name : result[0].product_name
+          });
+        }
+      }
+    );
+  } else {
+    logger_error.log({
+      level: "error",
+      email: "Not available",
+      message: "Input parameter not availabele..",
+    });
+    return res.status(400).json({
+      status: "400",
+      message: "Unable to delete the product listing.",
+    });
+  }
+};
 
 module.exports = { createProduct, searchProduct, updateProduct, deleteProduct };
