@@ -1,14 +1,22 @@
+//File used to define different product routes with their respective controllers
+
 const express = require("express");
 const router = express.Router();
-const product_controller = require("../controllers/product_controllers");
-const session = require("express-session");
+const {
+  createProduct,
+  searchProduct,
+  updateProduct,
+  deleteProduct,
+} = require("../controllers/productControllers");
 var cookieParser = require("cookie-parser");
-const user = require("../models/user_model");
-const { logger_error, logger_info } = require("../logger");
+const user = require("../models/userModel");
+const { loggerError } = require("../logger");
 
+//Middleware to use cookie and JSON parsing
 router.use(cookieParser());
 router.use(express.json());
 
+//Middleware : Verifying presence of session ID from cookie with DB
 const checkSession = (req, res, next) => {
   //console.log(req.sessionID)
   if (req.cookies["connect.sid"]) {
@@ -16,7 +24,7 @@ const checkSession = (req, res, next) => {
     sessionID = cookieInfo.substring(2, 38);
     user.find({ session_id: sessionID }, (err, result) => {
       if (err) {
-        logger_error.log({
+        loggerError.log({
           level: "error",
           email: "Not available",
           message: "Session does not exist in DB.",
@@ -30,7 +38,7 @@ const checkSession = (req, res, next) => {
       }
     });
   } else {
-    logger_error.log({
+    loggerError.log({
       level: "error",
       email: req.body.email,
       message: "Session does not exist.",
@@ -43,9 +51,10 @@ const checkSession = (req, res, next) => {
 
 router.use(checkSession);
 
-router.post("/createproduct", product_controller.createProduct);
-router.get("/searchproduct/:productName", product_controller.searchProduct);
-router.patch("/updateproduct", product_controller.updateProduct)
-router.delete("/deleteproduct", product_controller.deleteProduct)
+//Routes and Controllers
+router.post("/createproduct", createProduct);
+router.get("/searchproduct", searchProduct);
+router.patch("/updateproduct", updateProduct);
+router.delete("/deleteproduct", deleteProduct);
 
 module.exports = router;

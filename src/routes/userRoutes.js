@@ -1,12 +1,16 @@
+//File used to define different user routes with their respective controllers
+
 const express = require("express");
 const router = express.Router();
 var session = require("express-session");
 const uuid = require("uuid");
 const { body } = require("express-validator");
-const user_controller = require("../controllers/user_controllers");
+const { signUp, signIn, signOut } = require("../controllers/userControllers");
 
+//Middleware to JSON parsing
 router.use(express.json());
 
+//Middleware : Session ID generation
 router.use(
   session({
     genid: (req) => {
@@ -20,13 +24,14 @@ router.use(
   })
 );
 
+//Routes and Controllers
 router.post(
   "/signup",
   body("email").isEmail(),
   body("password").isStrongPassword(),
-  user_controller.signUp
+  signUp
 );
-router.post("/signin", user_controller.signIn);
-router.post("/signout", user_controller.signOut);
+router.post("/signin", signIn);
+router.post("/signout", signOut);
 
 module.exports = router;

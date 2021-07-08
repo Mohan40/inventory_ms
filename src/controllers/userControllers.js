@@ -1,13 +1,17 @@
-const { validationResult, cookie } = require("express-validator");
-const base64 = require("base-64");
-const user = require("../models/user_model");
-const { logger_error, logger_info } = require("../logger");
+//File used to define controllers for user routes
 
+const { validationResult } = require("express-validator");
+const base64 = require("base-64");
+const user = require("../models/userModel");
+const { loggerError, loggerInfo } = require("../logger");
+
+//Signup controller
 const signUp = (req, res) => {
+  //Validation result is from middleware used in signup route
   const errors = validationResult(req);
-  //logger_error.log(errors);
+  //loggerError.log(errors); For debugging only
   if (!errors.isEmpty()) {
-    logger_error.log({
+    loggerError.log({
       level: "error",
       email: req.body.email,
       message: "Invalid email address or password.",
@@ -16,9 +20,10 @@ const signUp = (req, res) => {
       .status(400)
       .json({ status: "400", message: "Error while signing up." });
   }
+  //Checking if email address is already present in DB
   user.find({ email: req.body.email }, (err, result) => {
     if (err) {
-      logger_error.log({
+      loggerError.log({
         level: "error",
         email: req.body.email,
         message: "Lookup for email failed.",
@@ -27,7 +32,7 @@ const signUp = (req, res) => {
         .status(400)
         .json({ code: "400", message: "Error while signing up." });
     } else if (result.length !== 0) {
-      logger_error.log({
+      loggerError.log({
         level: "error",
         email: req.body.email,
         message: "Email address already in use.",
@@ -36,14 +41,17 @@ const signUp = (req, res) => {
         .status(400)
         .json({ code: "400", message: "Error while signing up." });
     } else {
+      //Encoding the password in base64 format
       const encodedPassword = base64.encode(req.body.password);
-      const user_instance = new user({
+      //Create the document
+      const userInstance = new user({
         email: req.body.email,
         password: encodedPassword,
       });
-      user_instance.save((err) => {
+      //Save the document
+      userInstance.save((err) => {
         if (err) {
-          logger_error.log({
+          loggerError.log({
             level: "error",
             email: req.body.email,
             message: "Not able to save the instance.",
@@ -52,7 +60,7 @@ const signUp = (req, res) => {
             .status(400)
             .json({ code: "400", message: "Error while signing up." });
         } else {
-          logger_info.log({
+          loggerInfo.log({
             level: "info",
             email: req.body.email,
             message: "Success. Account created.",
@@ -66,10 +74,12 @@ const signUp = (req, res) => {
   });
 };
 
+//Signin controller
 const signIn = (req, res) => {
+  //Find the email address in DB
   user.find({ email: req.body.email }, (err, result) => {
     if (err) {
-      logger_error.log({
+      loggerError.log({
         level: "error",
         email: req.body.email,
         message: "Not able to find email.",
@@ -78,7 +88,7 @@ const signIn = (req, res) => {
         .status(400)
         .json({ code: "400", message: "Error while signing in." });
     } else if (result.length === 0) {
-      logger_error.log({
+      loggerError.log({
         level: "error",
         email: req.body.email,
         message: "Email address not found in database.",
@@ -88,14 +98,15 @@ const signIn = (req, res) => {
         .json({ code: "400", message: "Error while signing in." });
     } else {
       sessionID = req.sessionID;
+      //Decode the encoded password from DB and check with input recieved.
       if (req.body.password === base64.decode(result[0].password)) {
         user.findOneAndUpdate(
           { email: req.body.email },
-          { session_id: sessionID },
+          { sessionID: sessionID },
           { useFindAndModify: false },
-          (err, result) => {
+          (err) => {
             if (err) {
-              logger_error.log({
+              loggerError.log({
                 level: "error",
                 email: req.body.email,
                 message: "Updation of session id failed.",
@@ -106,7 +117,7 @@ const signIn = (req, res) => {
             }
           }
         );
-        logger_info.log({
+        loggerInfo.log({
           level: "info",
           email: req.body.email,
           message: "Welcome! Successfully signed in.",
@@ -117,7 +128,7 @@ const signIn = (req, res) => {
           sessionID: sessionID,
         });
       } else {
-        logger_error.log({
+        loggerError.log({
           level: "error",
           email: req.body.email,
           message: "Passwords don't match.",
@@ -130,17 +141,20 @@ const signIn = (req, res) => {
   });
 };
 
+//Signout controller
 const signOut = (req, res) => {
   if (req.session) {
-    logger_error.log(req.sessionID);
+    //console.log(req.sessionID); For debugging only
+    //Delete sessionID in request
     delete req.sessionID;
+    //Find and delete sessionID in DB
     user.findOneAndUpdate(
       { email: req.body.email },
-      { session_id: "None" },
+      { sessionID: "None" },
       { useFindAndModify: false },
-      (err, result) => {
+      (err) => {
         if (err) {
-          logger_error.log({
+          loggerError.log({
             level: "error",
             email: req.body.email,
             message: "Deletion of session id failed.",
@@ -151,12 +165,13 @@ const signOut = (req, res) => {
         }
       }
     );
-    //console.log(req.sessionID);
-    logger_info.log({
+    //console.log(req.sessionID); For debugging only
+    loggerInfo.log({
       level: "info",
       email: req.body.email,
       message: "Successfully signed out.",
     });
+    //Clear cookie in response
     return res.clearCookie("connect.sid").status(200).json({
       status: "200",
       message: "Successfully signed out.",

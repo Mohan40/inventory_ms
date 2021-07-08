@@ -1,8 +1,11 @@
-const mongoose = require("mongoose");
-const logger_error = require("./logger");
+//Database connection file
 
+const mongoose = require("mongoose");
+const { loggerError } = require("./logger");
+
+//Connect to mongoDB
 const connectDB = async () => {
-  const mongoDB = "mongodb://mohan:azsxdc!23@localhost:27017/inventory_ms_db";
+  const mongoDB = "mongodb://mohan:azsxdc!23@localhost:27017/inventoryMS";
   await mongoose.connect(mongoDB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -13,7 +16,7 @@ const connectDB = async () => {
   const db = mongoose.connection;
 
   db.on("error", () => {
-    logger_error.log({
+    loggerError.log({
       level: "error",
       message: "MongoDB Error: Connection failed.",
     });

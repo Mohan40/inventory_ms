@@ -2,58 +2,29 @@
 [2021-07-06T12:39:00.477Z] Not available - error: Product listing already available.
 [2021-07-06T13:51:13.538Z] undefined - error: Session does not exist.
 [2021-07-06T13:51:26.773Z] Not available - error: No product available.
-[2021-07-06T13:51:36.337Z] Not available - error: No product available.
-[2021-07-06T13:52:06.222Z] Not available - error: No product available.
-[2021-07-06T14:30:45.070Z] Not available - error: No product available.
-[2021-07-06T14:31:18.772Z] Not available - error: No product available.
-[2021-07-06T16:35:36.597Z] undefined - error: Session does not exist.
-[2021-07-06T17:35:00.401Z] undefined - error: Session does not exist.
-[2021-07-06T17:35:17.978Z] Not available - error: Error in update function.
-[2021-07-06T17:36:56.672Z] Not available - error: Error in update function.
-[2021-07-06T17:36:57.656Z] Not available - error: Error in update function.
-[2021-07-06T17:42:19.773Z] Not available - error: Error in update function.
-[2021-07-06T17:43:03.530Z] Not available - error: Error in update function.
-[2021-07-06T18:08:05.405Z] undefined - error: Session does not exist.
-[2021-07-06T18:08:14.979Z] Not available - error: Error in update function.
-[2021-07-06T18:12:03.803Z] Not available - error: Error in update function.
-[2021-07-06T18:17:18.943Z] Not available - error: Error in update function.
-[2021-07-06T18:20:36.212Z] undefined - error: Session does not exist.
-[2021-07-06T18:20:45.949Z] Not available - error: Error in update function.
-[2021-07-06T18:21:13.205Z] Not available - error: Error in update function.
-[2021-07-06T18:26:25.606Z] Not available - error: Error in update function.
-[2021-07-06T18:33:56.728Z] undefined - error: Session does not exist.
-[2021-07-06T18:35:55.226Z] Not available - error: Error in update function.
-[2021-07-07T05:37:20.812Z] undefined - error: Session does not exist.
-[2021-07-07T05:37:40.550Z] Not available - error: Error in update function.
-[2021-07-07T05:39:03.521Z] Not available - error: Error in update function.
-[2021-07-07T05:43:32.560Z] Not available - error: Error in update function.
-[2021-07-07T05:44:14.265Z] Not available - error: Error in update function.
-[2021-07-07T08:38:45.800Z] undefined - error: Session does not exist.
-[2021-07-07T08:38:58.402Z] Not available - error: Error in update function.
-[2021-07-07T08:40:41.368Z] Not available - error: Error in update function.
-[2021-07-07T08:43:18.239Z] Not available - error: Error in update function.
-[2021-07-07T08:43:21.338Z] Not available - error: Error in update function.
-[2021-07-07T08:43:48.071Z] Not available - error: Error in update function.
-[2021-07-07T08:44:27.520Z] Not available - error: Error in update function.
-[2021-07-07T08:46:37.817Z] Not available - error: Error in update function.
-[2021-07-07T08:52:02.061Z] undefined - error: Session does not exist.
-[2021-07-07T08:58:37.158Z] Not available - error: Error in update function.
-[2021-07-07T09:00:24.261Z] Not available - error: Error in update function.
-[2021-07-07T09:07:18.767Z] undefined - error: Session does not exist.
-[2021-07-07T09:07:24.433Z] Not available - error: Error in update function.
-[2021-07-07T09:07:24.435Z] Not available - error: Unhandeled exception caught in catch()
-[2021-07-07T09:14:32.658Z] Not available - error: Error in update function.
-[2021-07-07T09:15:05.532Z] Not available - error: Error in update function.
-[2021-07-07T09:17:11.020Z] Not available - error: Error in update function.
-[2021-07-07T09:17:46.585Z] undefined - error: Session does not exist.
-[2021-07-07T09:17:54.501Z] Not available - error: Error in update function.
-[2021-07-07T11:11:48.986Z] undefined - error: Session does not exist.
-[2021-07-07T11:28:04.852Z] Not available - error: Error in update function.
-[2021-07-07T11:33:28.133Z] Not available - error: Error in update function.
-[2021-07-07T11:35:06.523Z] Not available - error: Error in update function.
-[2021-07-07T12:28:48.922Z] Not available - error: Input parameter not availabele..
-[2021-07-07T12:30:31.723Z] Not available - error: Input parameter not availabele..
-[2021-07-07T12:36:05.287Z] undefined - error: Session does not exist.
-[2021-07-07T12:46:10.833Z] undefined - error: Session does not exist.
 [2021-07-07T12:58:23.950Z] undefined - error: Session does not exist.
 [2021-07-07T13:01:58.284Z] Not available - error: No product available.
+[2021-07-07T16:19:56.278Z] Not available - error: Product listing already available.
+[2021-07-07T16:26:04.429Z] sampletest@gmail.com - error: Passwords don't match.
+[2021-07-08T06:02:05.686Z] sampletest@gmail.com - error: Email address already in use.
+[2021-07-08T06:02:34.054Z] Not available - error: Not able to save the instance.
+[2021-07-08T06:04:57.737Z] Not available - error: No product available.
+[2021-07-08T06:05:08.065Z] Not available - error: Error in update function.
+[2021-07-08T06:09:46.364Z] Not available - error: No product available.
+[2021-07-08T06:12:15.373Z] undefined - error: Session does not exist.
+[2021-07-08T08:55:05.933Z] undefined - error: Session does not exist.
+[2021-07-08T09:04:05.137Z] Not available - error: Error in update function.
+[2021-07-08T09:16:21.863Z] undefined - error: Session does not exist.
+[2021-07-08T09:17:27.629Z] Not available - error: Error in update function.
+[2021-07-08T09:18:01.635Z] Not available - error: Error in update function.
+[2021-07-08T09:35:40.190Z] undefined - error: Session does not exist.
+[2021-07-08T09:35:50.150Z] Not available - error: Error in update function.
+[2021-07-08T09:43:01.554Z] Not available - error: Error in update function.
+[2021-07-08T09:45:17.962Z] Not available - error: Error in update function.
+[2021-07-08T09:46:20.125Z] Not available - error: Error in update function.
+[2021-07-08T10:12:48.489Z] undefined - error: Session does not exist.
+[2021-07-08T10:13:09.513Z] Not available - error: Error in update function.
+[2021-07-08T10:14:36.787Z] Not available - error: Error in update function.
+[2021-07-08T10:15:31.903Z] Not available - error: Error in update function.
+[2021-07-08T10:16:56.584Z] Not available - error: Error in update function.
+[2021-07-08T10:22:22.980Z] Not available - error: Error in update function.
