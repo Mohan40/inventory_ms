@@ -1,7 +1,7 @@
 //Database connection file
 
 const mongoose = require("mongoose");
-const { loggerError } = require("./logger");
+const { loggerError } = require("../logger");
 
 //Connect to mongoDB
 const connectDB = async () => {

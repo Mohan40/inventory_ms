@@ -14,11 +14,12 @@ const signUp = (req, res) => {
     loggerError.log({
       level: "error",
       email: req.body.email,
-      message: "Invalid email address or password.",
+      message: "Invalid email address or password format.",
     });
-    return res
-      .status(400)
-      .json({ status: "400", message: "Error while signing up." });
+    return res.status(400).json({
+      status: "400",
+      message: "Invalid email address or password format.",
+    });
   }
   //Checking if email address is already present in DB
   user.find({ email: req.body.email }, (err, result) => {
@@ -39,7 +40,7 @@ const signUp = (req, res) => {
       });
       return res
         .status(400)
-        .json({ code: "400", message: "Error while signing up." });
+        .json({ code: "400", message: "Email address already in use." });
     } else {
       //Encoding the password in base64 format
       const encodedPassword = base64.encode(req.body.password);
@@ -60,14 +61,32 @@ const signUp = (req, res) => {
             .status(400)
             .json({ code: "400", message: "Error while signing up." });
         } else {
-          loggerInfo.log({
-            level: "info",
-            email: req.body.email,
-            message: "Success. Account created.",
+          let userID = 0;
+          user.find({ email: req.body.email }, (err, result) => {
+            if (err) {
+              loggerError.log({
+                level: "error",
+                email: req.body.email,
+                message: "Not able to find email address in DB.",
+              });
+              return res
+                .status(400)
+                .json({ code: "400", message: "Error while signing up." });
+            } else {
+              userID = result[0].userID;
+              loggerInfo.log({
+                level: "info",
+                email: req.body.email,
+                message: "Success. Account created.",
+              });
+              return res.status(200).json({
+                status: "200",
+                message: "Success. Account created.",
+                email: req.body.email,
+                userID: userID,
+              });
+            }
           });
-          return res
-            .status(200)
-            .json({ status: "200", message: "Success. Account created." });
         }
       });
     }
@@ -95,7 +114,7 @@ const signIn = (req, res) => {
       });
       return res
         .status(400)
-        .json({ code: "400", message: "Error while signing in." });
+        .json({ code: "400", message: "Email address not found in database." });
     } else {
       sessionID = req.sessionID;
       //Decode the encoded password from DB and check with input recieved.
@@ -111,9 +130,10 @@ const signIn = (req, res) => {
                 email: req.body.email,
                 message: "Updation of session id failed.",
               });
-              return res
-                .status(400)
-                .json({ code: "400", message: "Error while signing in." });
+              return res.status(400).json({
+                code: "400",
+                message: "Updation of session id failed.",
+              });
             }
           }
         );
@@ -125,6 +145,7 @@ const signIn = (req, res) => {
         return res.status(200).json({
           status: "200",
           message: "Welcome! Successfully signed in.",
+          email: req.body.email,
           sessionID: sessionID,
         });
       } else {
@@ -135,7 +156,7 @@ const signIn = (req, res) => {
         });
         return res
           .status(400)
-          .json({ code: "400", message: "Error while signing in." });
+          .json({ code: "400", message: "Passwords don't match." });
       }
     }
   });
@@ -152,7 +173,7 @@ const signOut = (req, res) => {
       { email: req.body.email },
       { sessionID: "None" },
       { useFindAndModify: false },
-      (err) => {
+      (err, result) => {
         if (err) {
           loggerError.log({
             level: "error",
@@ -161,21 +182,23 @@ const signOut = (req, res) => {
           });
           return res
             .status(400)
-            .json({ code: "400", message: "Error while signing out." });
+            .json({ code: "400", message: "Deletion of session id failed." });
+        } else {
+          //console.log(req.sessionID); For debugging only
+          loggerInfo.log({
+            level: "info",
+            email: req.body.email,
+            message: "Successfully signed out.",
+          });
+          //Clear cookie in response
+          return res.clearCookie("connect.sid").status(200).json({
+            status: "200",
+            message: "Successfully signed out.",
+            email: req.body.email,
+          });
         }
       }
     );
-    //console.log(req.sessionID); For debugging only
-    loggerInfo.log({
-      level: "info",
-      email: req.body.email,
-      message: "Successfully signed out.",
-    });
-    //Clear cookie in response
-    return res.clearCookie("connect.sid").status(200).json({
-      status: "200",
-      message: "Successfully signed out.",
-    });
   }
 };
 

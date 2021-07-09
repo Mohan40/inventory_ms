@@ -25,7 +25,7 @@ const createProduct = (req, res) => {
       });
       return res.status(400).json({
         status: "400",
-        message: "Error creating the product listing.",
+        message: "Product listing already available.",
       });
     } else {
       //Create the document
@@ -49,14 +49,32 @@ const createProduct = (req, res) => {
             message: "Error creating the product listing.",
           });
         } else {
-          loggerInfo.log({
-            level: "info",
-            email: req.body.email,
-            message: "Success. Product listing created.",
-          });
-          return res.status(200).json({
-            status: "200",
-            message: "Success. Product listing created.",
+          product.find({ productName: req.body.productName }, (err, result) => {
+            if (err) {
+              loggerError.log({
+                level: "error",
+                email: "Not available",
+                message: "Not able to find the product.",
+              });
+              return res.status(400).json({
+                code: "400",
+                message: "Error creating the product listing.",
+              });
+            } else {
+              loggerInfo.log({
+                level: "info",
+                email: req.body.email,
+                message: "Success. Product listing created.",
+              });
+              return res.status(200).json({
+                status: "200",
+                message: "Success. Product listing created.",
+                product: {
+                  id: result[0].productID,
+                  name: result[0].productName,
+                },
+              });
+            }
           });
         }
       });
@@ -105,7 +123,7 @@ const searchProduct = (req, res) => {
           specifications: result[0].productSpecifications,
           quantity: result[0].productQuantity,
           price: parseFloat(result[0].productPrice),
-          delivery_channel: result[0].deliveryChannel,
+          deliveryChannel: result[0].deliveryChannel,
         },
       });
     }
@@ -116,7 +134,7 @@ const searchProduct = (req, res) => {
 const updateProduct = (req, res) => {
   let errorCount = 0;
   //Check if product listing is avaliable in DB before updating
-  product.find({ productName: req.body.productName }, (err, result) => {
+  product.find({ productID: req.body.productID }, (err, result) => {
     if (err) {
       loggerError.log({
         level: "error",
@@ -141,7 +159,7 @@ const updateProduct = (req, res) => {
       const productUpdate = new Promise((resolve, reject) => {
         //Check for product specifications are sent in input and later update
         if (typeof req.body.productSpecifications !== "undefined") {
-          const filter = { productName: req.body.productName };
+          const filter = { productID: req.body.productID };
           const update = {
             productSpecifications: req.body.productSpecifications,
           };
@@ -167,7 +185,7 @@ const updateProduct = (req, res) => {
         }
         //Check for product quantity sent in input and later update
         if (typeof req.body.productQuantity !== "undefined") {
-          const filter = { productName: req.body.productName };
+          const filter = { productID: req.body.productID };
           const update = {
             productQuantity: req.body.productQuantity,
           };
@@ -193,7 +211,7 @@ const updateProduct = (req, res) => {
         }
         //Check for product price is sent in input and later update
         if (typeof req.body.productPrice !== "undefined") {
-          const filter = { productName: req.body.productName };
+          const filter = { productID: req.body.productID };
           const update = { productPrice: req.body.productPrice };
           product.findOneAndUpdate(
             filter,
@@ -227,7 +245,14 @@ const updateProduct = (req, res) => {
           return res.status(200).json({
             status: "200",
             message: "Successfully updated the product listing.",
-            productName: req.body.productName,
+            product: {
+              id: result[0].productID,
+              name: result[0].productName,
+              specifications: result[0].productSpecifications,
+              quantity: result[0].productQuantity,
+              price: parseFloat(result[0].productPrice),
+              deliveryChannel: result[0].deliveryChannel,
+            },
           });
         }
       });
@@ -237,57 +262,43 @@ const updateProduct = (req, res) => {
 
 //Controller for deleting a product route
 const deleteProduct = (req, res) => {
-  //Check if product name in req.body exists
-  if (typeof req.body.productName !== "undefined") {
-    //Find and delete the product listing
-    product.findOneAndDelete(
-      { productName: req.body.productName },
-      (err, result) => {
-        if (err) {
-          loggerError.log({
-            level: "error",
-            email: "Not available",
-            message: "Error in delete function.",
-          });
-          return res.status(400).json({
-            status: "400",
-            message: "Unable to delete the product listing.",
-          });
-        } else if (result === null) {
-          loggerError.log({
-            level: "error",
-            email: "Not available",
-            message: "No product available.",
-          });
-          return res.status(400).json({
-            status: "400",
-            message: "Unable to delete the product listing.",
-          });
-        } else {
-          loggerInfo.log({
-            level: "info",
-            email: "Not available",
-            message: "Successfully deleted the product listing.",
-          });
-          return res.status(200).json({
-            status: "200",
-            message: "Successfully deleted the product listing.",
-            //product_name : result[0].product_name
-          });
-        }
+  //Find and delete the product listing
+  product.findOneAndDelete(
+    { productID: req.body.productID },
+    (err, result) => {
+      if (err) {
+        loggerError.log({
+          level: "error",
+          email: "Not available",
+          message: "Error in delete function.",
+        });
+        return res.status(400).json({
+          status: "400",
+          message: "Unable to delete the product listing.",
+        });
+      } else if (result === null) {
+        loggerError.log({
+          level: "error",
+          email: "Not available",
+          message: "No product available.",
+        });
+        return res.status(400).json({
+          status: "400",
+          message: "No product available to delete.",
+        });
+      } else {
+        loggerInfo.log({
+          level: "info",
+          email: "Not available",
+          message: "Successfully deleted the product listing.",
+        });
+        return res.status(200).json({
+          status: "200",
+          message: "Successfully deleted the product listing.",
+        });
       }
-    );
-  } else {
-    loggerError.log({
-      level: "error",
-      email: "Not available",
-      message: "Input parameter not availabele..",
-    });
-    return res.status(400).json({
-      status: "400",
-      message: "Unable to delete the product listing.",
-    });
-  }
+    }
+  );
 };
 
 module.exports = { createProduct, searchProduct, updateProduct, deleteProduct };
