@@ -6,6 +6,7 @@ var session = require("express-session");
 const uuid = require("uuid");
 const { body } = require("express-validator");
 const { signUp, signIn, signOut } = require("../controllers/userControllers");
+const { loggerError } = require("../logger");
 
 //Middleware to JSON parsing
 router.use(express.json());
@@ -23,6 +24,26 @@ router.use(
     cookie: { maxAge: 600000 },
   })
 );
+
+const inputValidation = (req, res, next) => {
+  const userKeysList = ["email", "password"];
+  for (let key in req.body) {
+    if (userKeysList.includes(key) !== true) {
+      loggerError.log({
+        level: "error",
+        email: "Not available",
+        message: "Error: Input format is wrong.",
+      });
+      return res.status(400).json({
+        code: "400",
+        message: "Error: Input format is wrong.",
+      });
+    }
+  }
+  next();
+};
+
+router.use(inputValidation);
 
 //Routes and Controllers
 router.post(

@@ -51,6 +51,33 @@ const checkSession = (req, res, next) => {
 
 router.use(checkSession);
 
+const inputValidation = (req, res, next) => {
+  const productKeysList = [
+    "productID",
+    "productName",
+    "productSpecifications",
+    "productQuantity",
+    "productPrice",
+    "deliveryChannel",
+  ];
+  for (let key in req.body) {
+    if (productKeysList.includes(key) !== true) {
+      loggerError.log({
+        level: "error",
+        email: "Not available",
+        message: "Error: Input format is wrong.",
+      });
+      return res.status(400).json({
+        code: "400",
+        message: "Error: Input format is wrong.",
+      });
+    }
+  }
+  next()
+};
+
+router.use(inputValidation);
+
 //Routes and Controllers
 router.post("/createproduct", createProduct);
 router.get("/searchproduct", searchProduct);
