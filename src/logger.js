@@ -19,15 +19,4 @@ const loggerError = createLogger({
   ],
 });
 
-//Info file function
-const loggerInfo = createLogger({
-  format: format.combine(format.json(), format.timestamp(), myFormat),
-  transports: [
-    new transports.File({
-      filename: path.join(__dirname, "../logs/info.log"),
-      level: "info",
-    }),
-  ],
-});
-
-module.exports = { loggerError, loggerInfo };
+module.exports = { loggerError };

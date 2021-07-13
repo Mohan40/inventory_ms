@@ -5,7 +5,7 @@ const app = express();
 const connectDB = require("./src/db/dbConnection");
 const userRoutes = require("./src/routes/userRoutes");
 const productRoutes = require("./src/routes/productRoutes");
-const { loggerInfo } = require("./src/logger");
+const { loggerError } = require("./src/logger");
 
 //process.env.NODE_ENV = 'development';
 
@@ -22,8 +22,8 @@ app.use("/product", productRoutes);
 
 //Specifying a port that the server can listen to
 app.listen(PORT, () => {
-  loggerInfo.log({
-    level: "info",
+  loggerError.log({
+    level: "error",
     message: "Server is running on port 443...",
   });
   console.log("Server is running on port 443...");

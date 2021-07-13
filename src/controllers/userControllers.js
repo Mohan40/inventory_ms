@@ -3,7 +3,7 @@
 const { validationResult } = require("express-validator");
 const base64 = require("base-64");
 const user = require("../models/userModel");
-const { loggerError, loggerInfo } = require("../logger");
+const { loggerError } = require("../logger");
 
 //Signup controller
 const signUp = (req, res) => {
@@ -74,8 +74,8 @@ const signUp = (req, res) => {
                 .json({ code: "400", message: "Error while signing up." });
             } else {
               userID = result[0].userID;
-              loggerInfo.log({
-                level: "info",
+              loggerError.log({
+                level: "error",
                 email: req.body.email,
                 message: "Success. Account created.",
               });
@@ -137,8 +137,8 @@ const signIn = (req, res) => {
             }
           }
         );
-        loggerInfo.log({
-          level: "info",
+        loggerError.log({
+          level: "error",
           email: req.body.email,
           message: "Welcome! Successfully signed in.",
         });
@@ -185,8 +185,8 @@ const signOut = (req, res) => {
             .json({ code: "400", message: "Deletion of session id failed." });
         } else {
           //console.log(req.sessionID); For debugging only
-          loggerInfo.log({
-            level: "info",
+          loggerError.log({
+            level: "error",
             email: req.body.email,
             message: "Successfully signed out.",
           });

@@ -1,7 +1,7 @@
 //File used to define controllers for product routes
 
 const product = require("../models/productModel");
-const { loggerError, loggerInfo } = require("../logger");
+const { loggerError } = require("../logger");
 
 //Controller for creation of a product route
 const createProduct = (req, res) => {
@@ -61,8 +61,8 @@ const createProduct = (req, res) => {
                 message: "Error creating the product listing.",
               });
             } else {
-              loggerInfo.log({
-                level: "info",
+              loggerError.log({
+                level: "error",
                 email: req.body.email,
                 message: "Success. Product listing created.",
               });
@@ -107,8 +107,8 @@ const searchProduct = (req, res) => {
         message: "No product available.",
       });
     } else {
-      loggerInfo.log({
-        level: "info",
+      loggerError.log({
+        level: "error",
         email: "Not available",
         message: "Product found.",
       });
@@ -237,8 +237,8 @@ const updateProduct = (req, res) => {
       });
       productUpdate.then(() => {
         if (errorCount === 0) {
-          loggerInfo.log({
-            level: "info",
+          loggerError.log({
+            level: "error",
             email: "Not available",
             message: "Successfully updated the product listing.",
           });
@@ -287,8 +287,8 @@ const deleteProduct = (req, res) => {
           message: "No product available to delete.",
         });
       } else {
-        loggerInfo.log({
-          level: "info",
+        loggerError.log({
+          level: "error",
           email: "Not available",
           message: "Successfully deleted the product listing.",
         });
