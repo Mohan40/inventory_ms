@@ -9,14 +9,13 @@ const myFormat = format.printf(({ level, email, message, timestamp }) => {
 });
 
 //Error file function
-const loggerError = createLogger({
+const logger = createLogger({
   format: format.combine(format.json(), format.timestamp(), myFormat),
   transports: [
     new transports.File({
-      filename: path.join(__dirname, "../logs/error.log"),
-      level: "error",
+      filename: path.join(__dirname, "../logs/logs.log"),
     }),
   ],
 });
 
-module.exports = { loggerError };
+module.exports = { logger };

@@ -10,7 +10,7 @@ const {
 } = require("../controllers/productControllers");
 var cookieParser = require("cookie-parser");
 const user = require("../models/userModel");
-const { loggerError } = require("../logger");
+const { logger } = require("../logger");
 
 //Middleware to use cookie and JSON parsing
 router.use(cookieParser());
@@ -24,9 +24,8 @@ const checkSession = (req, res, next) => {
     sessionID = cookieInfo.substring(2, 38);
     user.find({ session_id: sessionID }, (err, result) => {
       if (err) {
-        loggerError.log({
+        logger.log({
           level: "error",
-          email: "Not available",
           message: "Session does not exist in DB.",
         });
         return res
@@ -38,7 +37,7 @@ const checkSession = (req, res, next) => {
       }
     });
   } else {
-    loggerError.log({
+    logger.log({
       level: "error",
       email: req.body.email,
       message: "Session does not exist.",
@@ -51,7 +50,7 @@ const checkSession = (req, res, next) => {
 
 router.use(checkSession);
 
-const inputValidation = (req, res, next) => {
+const inputValidationForCreation = (req, res, next) => {
   const productKeysList = [
     "productID",
     "productName",
@@ -62,9 +61,8 @@ const inputValidation = (req, res, next) => {
   ];
   for (let key in req.body) {
     if (productKeysList.includes(key) !== true) {
-      loggerError.log({
+      logger.log({
         level: "error",
-        email: "Not available",
         message: "Error: Input format is wrong.",
       });
       return res.status(400).json({
@@ -76,12 +74,65 @@ const inputValidation = (req, res, next) => {
   next()
 };
 
-router.use(inputValidation);
+const inputValidationForSearch = (req, res, next) => {
+  for (let key in req.body) {
+    if (key !== "productName") {
+      logger.log({
+        level: "error",
+        message: "Error: Input format is wrong.",
+      });
+      return res.status(400).json({
+        code: "400",
+        message: "Error: Input format is wrong.",
+      });
+    }
+  }
+  next()
+};
+
+const inputValidationForUpdation = (req, res, next) => {
+  const productKeysList = [
+    "productID",
+    "productSpecifications",
+    "productQuantity",
+    "productPrice"
+  ];
+  for (let key in req.body) {
+    if (productKeysList.includes(key) !== true) {
+      logger.log({
+        level: "error",
+        message: "Error: Input format is wrong.",
+      });
+      return res.status(400).json({
+        code: "400",
+        message: "Error: Input format is wrong.",
+      });
+    }
+  }
+  next()
+};
+
+const inputValidationForDeletion = (req, res, next) => {
+  for (let key in req.body) {
+    if (key !== "productID") {
+      logger.log({
+        level: "error",
+        message: "Error: Input format is wrong.",
+      });
+      return res.status(400).json({
+        code: "400",
+        message: "Error: Input format is wrong.",
+      });
+    }
+  }
+  next()
+};
+
 
 //Routes and Controllers
-router.post("/createproduct", createProduct);
-router.get("/searchproduct", searchProduct);
-router.patch("/updateproduct", updateProduct);
-router.delete("/deleteproduct", deleteProduct);
+router.post("/createproduct", inputValidationForCreation, createProduct);
+router.get("/searchproduct", inputValidationForSearch, searchProduct);
+router.patch("/updateproduct", inputValidationForUpdation, updateProduct);
+router.delete("/deleteproduct",inputValidationForDeletion, deleteProduct);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 //Database connection file
 
 const mongoose = require("mongoose");
-const { loggerError } = require("../logger");
+const { logger } = require("../logger");
 
 //Connect to mongoDB
 const connectDB = async () => {
@@ -16,7 +16,7 @@ const connectDB = async () => {
   const db = mongoose.connection;
 
   db.on("error", () => {
-    loggerError.log({
+    logger.log({
       level: "error",
       message: "MongoDB Error: Connection failed.",
     });

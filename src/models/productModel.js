@@ -20,7 +20,7 @@ const productSchema = new schema({
   },
   productQuantity: { type: Number, required: true, min: 1, max: 25 },
   productPrice: {
-    type: schema.Types.Decimal128,
+    type: Number,
     required: true,
     min: 1,
     max: 1000000,
