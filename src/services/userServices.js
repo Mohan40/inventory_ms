@@ -60,7 +60,6 @@ const signupService = (filter, email, password, res) => {
               });
             })
             .catch((err) => {
-              console.log(err);
               logger.log({
                 level: "error",
                 email: email,
@@ -73,7 +72,6 @@ const signupService = (filter, email, password, res) => {
         }
       })
       .catch((err) => {
-        console.log(err);
         logger.log({
           level: "error",
           email: email,
@@ -194,7 +192,6 @@ const signoutService = (req, res) => {
           }
         })
         .catch((err) => {
-          console.log(err);
           logger.log({
             level: "error",
             email: req.body.email,
