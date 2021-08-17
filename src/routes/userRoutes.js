@@ -2,7 +2,7 @@
 
 const express = require("express");
 const router = express.Router();
-var session = require("express-session");
+const session = require("express-session");
 const uuid = require("uuid");
 const { body } = require("express-validator");
 const { signUp, signIn, signOut } = require("../controllers/userControllers");

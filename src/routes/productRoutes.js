@@ -8,9 +8,10 @@ const {
   updateProduct,
   deleteProduct,
 } = require("../controllers/productControllers");
-var cookieParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 const user = require("../models/userModel");
 const { logger } = require("../logger");
+const { dbFind } = require("../db/dbOperations");
 
 //Middleware to use cookie and JSON parsing
 router.use(cookieParser());
@@ -18,34 +19,44 @@ router.use(express.json());
 
 //Middleware : Verifying presence of session ID from cookie with DB
 const checkSession = (req, res, next) => {
-  //console.log(req.sessionID)
-  if (req.cookies["connect.sid"]) {
-    cookieInfo = req.cookies["connect.sid"];
-    sessionID = cookieInfo.substring(2, 38);
-    user.find({ session_id: sessionID }, (err, result) => {
-      if (err) {
+  async function getSessionID() {
+    if (req.cookies["connect.sid"]) {
+      cookieInfo = req.cookies["connect.sid"];
+      return cookieInfo.substring(2, 38);
+    } else {
+      return null;
+    }
+  }
+
+  async function checkSessioninDB() {
+    const sessionID = await getSessionID();
+    const filter = { sessionID: sessionID };
+    dbFind(user, filter)
+      .then((document) => {
+        if (document.length !== 0) {
+          next();
+        } else {
+          logger.log({
+            level: "error",
+            message: "Session does not exist in DB.",
+          });
+          return res
+            .status(400)
+            .json({ status: "400", message: "Session does not exist." });
+        }
+      })
+      .catch((err) => {
         logger.log({
           level: "error",
           message: "Session does not exist in DB.",
         });
         return res
           .status(400)
-          .json({ status: "400", message: "Session does not exist in DB." });
-      } else {
-        //console.log(result[0].email)
-        next();
-      }
-    });
-  } else {
-    logger.log({
-      level: "error",
-      email: req.body.email,
-      message: "Session does not exist.",
-    });
-    return res
-      .status(400)
-      .json({ status: "400", message: "Session does not exist." });
+          .json({ status: "400", message: "Session does not exist." });
+      });
   }
+
+  checkSessioninDB();
 };
 
 router.use(checkSession);
@@ -71,7 +82,7 @@ const inputValidationForCreation = (req, res, next) => {
       });
     }
   }
-  next()
+  next();
 };
 
 const inputValidationForSearch = (req, res, next) => {
@@ -87,7 +98,7 @@ const inputValidationForSearch = (req, res, next) => {
       });
     }
   }
-  next()
+  next();
 };
 
 const inputValidationForUpdation = (req, res, next) => {
@@ -95,7 +106,7 @@ const inputValidationForUpdation = (req, res, next) => {
     "productID",
     "productSpecifications",
     "productQuantity",
-    "productPrice"
+    "productPrice",
   ];
   for (let key in req.body) {
     if (productKeysList.includes(key) !== true) {
@@ -109,7 +120,7 @@ const inputValidationForUpdation = (req, res, next) => {
       });
     }
   }
-  next()
+  next();
 };
 
 const inputValidationForDeletion = (req, res, next) => {
@@ -125,14 +136,13 @@ const inputValidationForDeletion = (req, res, next) => {
       });
     }
   }
-  next()
+  next();
 };
-
 
 //Routes and Controllers
 router.post("/createproduct", inputValidationForCreation, createProduct);
 router.get("/searchproduct", inputValidationForSearch, searchProduct);
 router.patch("/updateproduct", inputValidationForUpdation, updateProduct);
-router.delete("/deleteproduct",inputValidationForDeletion, deleteProduct);
+router.delete("/deleteproduct", inputValidationForDeletion, deleteProduct);
 
 module.exports = router;
